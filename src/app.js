@@ -1,5 +1,5 @@
 /**
- * @author Luuxis
+ * @author F4raday
  * @license CC-BY-NC 4.0 - https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -21,13 +21,41 @@ if (dev) {
     if (!fs.existsSync(appPath)) fs.mkdirSync(appPath, { recursive: true });
     app.setPath('userData', appPath);
 }
+const clientId = '1148081170337247282';
+const DiscordRPC = require('discord-rpc');
+const RPC = new DiscordRPC.Client({ transport: 'ipc'});
+DiscordRPC.register(clientId);
 
+async function setActivity(){
+    if (!RPC) return;
+    RPC.setActivity({
+        details: "Jugando a HardGore ",
+        startTimestamp: Date.now(),
+        largeImageKey: 'image',
+        instance: false,
+        buttons: [
+            {
+                label: "Discord",
+                url: "https://discord.gg/kx8yyWGAdW",
+            }
+        ]
+    });
+}
+RPC.on('ready', async () => {
+    setActivity();
+ 
+    setInterval(() => {
+        setActivity();
+    }, 86400 * 1000);
+ });
+ RPC.login({ clientId }).catch(err => console.error(err));
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
     app.quit();
 } else {
     app.whenReady().then(() => {
+        setActivity();
         UpdateWindow.createWindow();
     });
 }

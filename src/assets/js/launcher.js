@@ -109,8 +109,6 @@ class Launcher {
                         uuid: refresh.uuid
                     }
 
-                    this.database.update(refresh_accounts, 'accounts');
-                    this.database.update(refresh_profile, 'profile');
                     addAccount(refresh_accounts);
                     if (account.uuid === selectaccount) accountSelect(refresh.uuid)
                 } else if (account.meta.type === 'Mojang') {
